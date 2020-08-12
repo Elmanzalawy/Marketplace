@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
 // SLICK SLIDER SCRIPTS
 //Visit https://github.com/kenwheeler/slick/ for documentation
     $('.recent-products, .similar-products').slick({

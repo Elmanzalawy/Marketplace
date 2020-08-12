@@ -38,7 +38,7 @@
 
             {{-- SPOOFING METHOD --}}
             {{Form::hidden('_method','PUT')}}
-            {{Form::submit('Add Product',['class'=>'btn btn-primary my-2'])}}
+            {{Form::submit('Edit Product',['class'=>'btn btn-primary my-2'])}}
         {{ Form::close() }}
   </div>
 </div>

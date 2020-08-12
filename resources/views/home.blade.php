@@ -3,13 +3,13 @@
 @section('content')
 <style>
 body{
-    background:linear-gradient(45deg, white, lavender) no-repeat;
-    height: 100vh;
+
 }
 </style>
 <div class="container">
         <h2 class="text-center my-4">Welcome, {{Auth::user()->name}}</h2>
         <a href="{{url('products/create')}}" class="btn btn-primary">Add Product</a>
+        <a href="{{url('cart')}}" class="btn btn-info pull-right">Cart</a>
 
         @if(count($products)>0)
             <table class="text-center table table-striped background-light font-dark my-2">
@@ -28,7 +28,7 @@ body{
                 @foreach($products as $product)
                 <tr>
                         <th class="py-4" scope="row">{{$loop->iteration}}</th>
-                        <td class="py-4">{{$product->name}}</td>
+                        <td class="py-4"><a href="{{url('products/'.$product->id)}}">{{$product->name}} </a></td>
                         <td class="py-4">{{$product->quantity}}</td>
                         <td class="py-4">${{$product->price}}</td>
                         <td class="py-4">{{$product->type}}</td>

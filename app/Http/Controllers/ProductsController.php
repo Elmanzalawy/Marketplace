@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Product;
+use App\User;
 class ProductsController extends Controller
 {
     /**
@@ -113,10 +114,12 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        $data = array(
-            'product'=>Product::find($id),
-        );
-        return view('products/edit')->with($data);
+        if(auth()->user()->id==$product->seller_id){
+        return view('products/edit')->with('product', $product);
+        }
+        else{
+         return back()->with('error','Error: Unauthorized user.');
+         }
     }
 
     /**
@@ -192,5 +195,30 @@ class ProductsController extends Controller
         }else{
             return back()->with('error','Unauthorized user.');
         }        
+    }
+
+    public function buy(Request $request, $id){
+        $product = Product::find($id);
+        $quantity = $request->input('quantity');
+        if($product->quantity >= $quantity && $product->seller_id != auth()->user()->id){
+            $product->quantity = $product->quantity - $quantity;
+            $product->save();
+            return back()->with('success','Successfully purchased '.$quantity.' units of '.$product->name);
+        }else{
+            if($product->seller_id == auth()->user()->id){
+                return back()->with('error','Error: Cannot purchase your own products');
+            }else{
+                return back()->with('error','Error: please enter a valid quantity.');
+            }
+        }
+        
+    }
+
+    public function seller(Request $request, $id){
+        $data = array(
+            'seller' => User::find($id),
+            'products' => Product::where('seller_id', $id)->orderBy('created_at','desc')->paginate(25),
+        );
+        return view('seller')->with($data);
     }
 }
